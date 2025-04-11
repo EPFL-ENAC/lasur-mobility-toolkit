@@ -1,0 +1,91 @@
+{
+  "token": "cBvMZNcdBLqz82GOgENvYw",
+  "data": {
+    "employment_rate": 100,
+    "remote_work_rate": 40,
+    "company_vehicle": false,
+    "travel_time": 30,
+    "equipments": [
+      "bike",
+      "upt_subs",
+      "eab",
+      "train_subs",
+      "moto",
+      "mob_subs",
+      "car_passenger",
+      "car_driver"
+    ],
+    "constraints": [
+      "dependent",
+      "heavy",
+      "night",
+      "disabled"
+    ],
+    "freq_mod_walking": 1,
+    "freq_mod_bike": 2,
+    "freq_mod_pub": 2,
+    "freq_mod_moto": 0,
+    "freq_mod_car": 1,
+    "freq_mod_train": 1,
+    "freq_mod_combined": true,
+    "freq_trav_pro_local": 4,
+    "freq_mod_pro_local_walking": 0,
+    "freq_mod_pro_local_bike": 2,
+    "freq_mod_pro_local_pub": 2,
+    "freq_mod_pro_local_moto": 0,
+    "freq_mod_pro_local_car": 0,
+    "freq_mod_pro_local_train": 0,
+    "freq_mod_pro_local_combined": false,
+    "freq_trav_pro_region": 2,
+    "freq_mod_pro_region_pub": 0,
+    "freq_mod_pro_region_moto": 0,
+    "freq_mod_pro_region_car": 2,
+    "freq_mod_pro_region_train": 0,
+    "freq_mod_pro_region_plane": 0,
+    "freq_mod_pro_region_combined": false,
+    "freq_trav_pro_inter": 1,
+    "freq_mod_pro_inter_car": 1,
+    "freq_mod_pro_inter_train": 0,
+    "freq_mod_pro_inter_plane": 0,
+    "freq_mod_pro_inter_combined": false,
+    "importance_time": 3,
+    "importance_cost": 3,
+    "importance_flex": 3,
+    "importance_rel": 3,
+    "importance_comfort": 3,
+    "importance_most": 3,
+    "importance_env": 3,
+    "needs_walking": 2,
+    "needs_bike": 4,
+    "needs_pub": 3,
+    "needs_moto": 2,
+    "needs_car": 4,
+    "needs_train": 3,
+    "adjectives_bikes": [
+      "polluting",
+      "healthy",
+      "congested"
+    ],
+    "adjectives_pubs": [
+      "polluting",
+      "dangerous",
+      "tiring"
+    ],
+    "adjectives_motors": [
+      "expensive",
+      "practical",
+      "ecological"
+    ],
+    "workplace": {
+      "address": "Place de Cornavin 1201 Geneva CH",
+      "lon": 6.1426218,
+      "lat": 46.210228799999996
+    },
+    "age_class": "18-24",
+    "origin": {
+      "address": "01210 Ferney-Voltaire FR",
+      "lat": 46.251961949999995,
+      "lon": 6.10620805
+    }
+  }
+}

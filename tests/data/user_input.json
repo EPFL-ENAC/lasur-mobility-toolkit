@@ -1,0 +1,94 @@
+{
+  "idno": "1000100001",
+  "id_empl": "0001",
+  "timestamp":"2025-01-27 14:09:28",
+  "prelim":{
+    "age": 3, 
+    "tx_trav": 5,
+    "tx_tele": 2, 
+    "veh_fct": 0, 
+    "tps_traj":45
+  },
+  "coords_dom":{
+    "lat_dom": 46.210,
+    "lon_dom": 6.150
+  },
+  "coords_trav":{
+    "lat_trav": 46.520,
+    "lon_trav": 6.570
+  },
+  "equipement":{
+    "velo":1, 
+    "abo_tpu":1,
+    "abo_trn":1,
+    "abo_mob":1,
+    "permis":1,
+    "voiture":0,
+    "moto":0
+  },
+  "contraintes":{
+    "cdte_dep":0,
+    "mobi_redu":0,
+    "trsp_mat":0,
+    "trav_nuit":0,
+    "chain_traj":1 
+  },
+  "freq_mod_dt":{
+    "marche":0,
+    "velo":1,
+    "tpu":0,
+    "train":2,
+    "moto":0,
+    "voiture":0,
+    "combi":0
+  },
+  "fr_pro":{
+    "fr_pro_loc":3,
+    "fr_pro_reg":2,
+    "fr_pro_int":1
+  },
+  "fm_pro_loc":{
+    "fm_pro_loc_voit":0,
+    "fm_pro_loc_moto":0,
+    "fm_pro_loc_tpu":3,
+    "fm_pro_loc_train":2,
+    "fm_pro_loc_velo":0,
+    "fm_pro_loc_marc":0,
+    "fm_pro_loc_combi":0
+  },
+  "fm_pro_reg":{
+    "fm_pro_reg_voit":0,
+    "fm_pro_reg_moto":0,
+    "fm_pro_reg_train":3,
+    "fm_pro_reg_avio":2,
+    "fm_pro_reg_combi":0
+  },
+  "fm_pro_int":{
+    "fm_pro_int_voit":0,
+    "fm_pro_int_train":0,
+    "fm_pro_int_avio":3
+  },
+  "importance":{
+   "temps":5,
+    "prix":4,
+    "flexi":3,
+    "fiable":2,
+    "confort":1,
+    "profit":2,
+    "enviro":4
+  },
+  "adaptation":{
+    "marche":1,
+    "velo":2,
+    "tpu":3,
+    "train":2,
+    "moto":3,
+    "voiture":2
+  },
+  "adjectifs":{
+    "tim":["Polluant","Bruyant","Cher"],
+    "tp":["Pratique","Fatigant","Ecologique"],
+    "md":["Rapide","Sportif","Economique"]
+  },
+  "commentaires":"Merci!"
+}

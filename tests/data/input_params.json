@@ -1,0 +1,23 @@
+{
+  "tps_traj": 58,
+  "tx_trav": 5,
+  "tx_tele": 2,
+  "fm_dt_voit": 2,
+  "fm_dt_moto": 1,
+  "fm_dt_tpu": 1,
+  "fm_dt_train": 0,
+  "fm_dt_velo": 2,
+  "a_voit": 2,
+  "a_moto": 3,
+  "a_tpu": 5,
+  "a_train": 1,
+  "a_marc": 5,
+  "a_velo": 4,
+  "i_tmps": 4,
+  "i_prix": 5,
+  "i_flex": 2, 
+  "i_conf": 5,
+  "i_fiab": 3,
+  "i_prof": 5,
+  "i_envi": 4
+}
