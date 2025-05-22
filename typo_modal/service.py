@@ -106,9 +106,9 @@ class TypoModalService:
     sum_importance = i_tmps + i_prix + i_flex + i_conf + i_fiab + i_prof + i_envi
     score_marche = 50 + 2*a_marc + 2*fm_dt_march
     score_velo = round(15*(i_tmps*1 + i_prix*5 + i_flex*4 + i_conf*1 + i_prof*1 + i_fiab*4 + i_envi*5)/sum_importance) + 2*a_velo + 2*fm_dt_velo
-    score_vae = score_velo - 0.1
+    score_vae = round(15*(i_tmps*3 + i_prix*3 + i_flex*4 + i_conf*1 + i_prof*1 + i_fiab*4 + i_envi*5)/sum_importance) + a_velo + a_moto + fm_dt_velo + fm_dt_moto
     score_tpu = round(15*(i_tmps*3 + i_prix*4 + i_flex*2 + i_conf*2 + i_prof*4 + i_fiab*2 + i_envi*4)/sum_importance) + 2*a_tpu + 2*fm_dt_tpu
-    score_train = round(15*(i_tmps*3 + i_prix*2 + i_flex*2 + i_conf*3 + i_prof*5 + i_fiab*3 + i_envi*3)/sum_importance) + 2*a_train + 2*fm_dt_train
+    score_train = round(15*(i_tmps*3 + i_prix*1 + i_flex*2 + i_conf*3 + i_prof*5 + i_fiab*3 + i_envi*4)/sum_importance) + 2*a_train + 2*fm_dt_train
     score_covoit = round(15*(i_tmps*4 + i_prix*3 + i_flex*2 + i_conf*4 + i_prof*4 + i_fiab*2 + i_envi*2)/sum_importance) + 2*a_voit + 2*fm_dt_voit
     score_elec = round(15*(i_tmps*4 + i_prix*1 + i_flex*5 + i_conf*5 + i_prof*1 + i_fiab*4 + i_envi*1)/sum_importance) + 2*a_voit + 2*fm_dt_voit
     score_inter = round(15*(i_tmps*4 + i_prix*2 + i_flex*3 + i_conf*4 + i_prof*3 + i_fiab*3 + i_envi*2)/sum_importance) + a_train + a_voit + fm_dt_train + fm_dt_voit + 2 * fm_dt_inter
@@ -126,11 +126,11 @@ class TypoModalService:
       can_train = 1
     if t_traj_mm['t_tp']  <=  2*tps_traj and self.orig_dess.loc[self.orig_dess.id_true == t_traj_mm['oid'], 'tpu'].values == 1 and self.dest_dess.loc[self.dest_dess.id_true == t_traj_mm['did'], 'tpu'].values == 1:
       can_tpu = 1
-    if t_traj_mm['t_velo']  <=  5 and "disabled" not in constraints and "heavy" not in constraints:
+    if t_traj_mm['t_velo']  <=  6 and "disabled" not in constraints and "heavy" not in constraints:
       can_walk = 1
-    if t_traj_mm['t_velo']  <=  2*tps_traj and t_traj_mm['t_velo']  <=  20 and "disabled" not in constraints and "heavy" not in constraints:
+    if t_traj_mm['t_velo']  <=  2*tps_traj and t_traj_mm['t_velo']  <=  18 and "disabled" not in constraints and "heavy" not in constraints:
       can_bike = 1
-    if t_traj_mm['t_velo']  <=  2*tps_traj and t_traj_mm['t_velo']  <=  40 and "disabled" not in constraints and "heavy" not in constraints:
+    if t_traj_mm['t_velo']  <=  2*tps_traj and t_traj_mm['t_velo']  <=  60 and "disabled" not in constraints and "heavy" not in constraints:
       can_vae = 1
     if self.orig_dess.loc[self.orig_dess.id_true == t_traj_mm['oid'], 'train'].values == 0 and self.dest_dess.loc[self.dest_dess.id_true == t_traj_mm['did'], 'train'].values == 1:
       can_inter = 1
@@ -138,11 +138,11 @@ class TypoModalService:
       can_elec=0.7
       can_covoit=0.7
     elif constraints==["dependent"] or constraints==["heavy"]:
-      can_elec=1
+      can_elec=0.9
       can_covoit=0.7
     elif constraints==["disabled"]:
-      can_elec=0.7
-      can_covoit=1
+      can_elec=0.9
+      can_covoit=0.9
     else:
       can_elec=1
       can_covoit=1
