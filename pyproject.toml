@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "typo-modal"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Clément Rames <clement.rames@epfl.ch>"]
 license = "GPLv3"
