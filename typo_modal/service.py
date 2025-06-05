@@ -163,16 +163,17 @@ class TypoModalService:
     #deplacements pro portee locale
     if pro_loc:
       fr_pro_loc = fm_pro_loc_voit + fm_pro_loc_moto + fm_pro_loc_tpu + fm_pro_loc_train + fm_pro_loc_velo + fm_pro_loc_marc
-      if fm_pro_loc_marc == fr_pro_loc:
-        reco_pro_loc = "marche"
-      elif scores['velo']>55 or fm_pro_loc_velo/fr_pro_loc >= 0.5:
-        reco_pro_loc = "velo"
-      elif scores['tpu']>55 or fm_pro_loc_tpu/fr_pro_loc >= 0.5:
-        reco_pro_loc = "tpu"
-      elif scores['train']>55 or fm_pro_loc_train/fr_pro_loc >= 0.5:
-        reco_pro_loc = "train"
-      elif scores['elec']>55 or fm_pro_loc_voit/fr_pro_loc >= 0.5:
-        reco_pro_loc = "elec"
+      if fr_pro_loc > 0:
+        if fm_pro_loc_marc == fr_pro_loc:
+          reco_pro_loc = "marche"
+        elif scores['velo']>55 or fm_pro_loc_velo/fr_pro_loc >= 0.5:
+          reco_pro_loc = "velo"
+        elif scores['tpu']>55 or fm_pro_loc_tpu/fr_pro_loc >= 0.5:
+          reco_pro_loc = "tpu"
+        elif scores['train']>55 or fm_pro_loc_train/fr_pro_loc >= 0.5:
+          reco_pro_loc = "train"
+        elif scores['elec']>55 or fm_pro_loc_voit/fr_pro_loc >= 0.5:
+          reco_pro_loc = "elec"
       #else: 
         #reco_pro_loc = "global"
         # reco_pro_loc_ranked=[item for item in sorted(scores, key=scores.get, reverse=True) if item not in ['covoit','inter','marche']]
@@ -180,10 +181,11 @@ class TypoModalService:
     #deplacements pro portee regionale
     if pro_reg:
       fr_pro_reg = fm_pro_reg_voit + fm_pro_reg_moto + fm_pro_reg_train + fm_pro_reg_avio
-      if scores['train']>50 or fm_pro_reg_train/fr_pro_reg >= 0.5:
-        reco_pro_reg = "train"
-      elif scores['elec']>50 or fm_pro_reg_voit/fr_pro_reg >= 0.5:
-        reco_pro_reg = "elec"
+      if fr_pro_reg > 0:
+        if scores['train']>50 or fm_pro_reg_train/fr_pro_reg >= 0.5:
+          reco_pro_reg = "train"
+        elif scores['elec']>50 or fm_pro_reg_voit/fr_pro_reg >= 0.5:
+          reco_pro_reg = "elec"
       #else:
         #reco_pro_reg = "global"
     #deplacements pro portee internationale

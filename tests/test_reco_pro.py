@@ -6,6 +6,16 @@ def service():
   od_mm, orig_dess, dest_dess = load_data()
   return TypoModalService(od_mm, orig_dess, dest_dess)
 
+def test_compute_reco_pro_local_null(service):
+  result = service.compute_reco_pro(
+    scores={"velo":50, "tpu":50, "train":50, "elec":50},
+    pro_loc=True, pro_reg=True, pro_int=True,
+    fm_pro_loc_voit=0, fm_pro_loc_moto=0, fm_pro_loc_tpu=0, fm_pro_loc_train=0, fm_pro_loc_velo=0, fm_pro_loc_marc=0,
+    fm_pro_reg_voit=0, fm_pro_reg_moto=0, fm_pro_reg_train=0, fm_pro_reg_avio=0,
+    fm_pro_int_voit=0, fm_pro_int_train=0, fm_pro_int_avio=0
+  )
+  assert result == ("", "", "")
+
 def test_compute_reco_pro_local_velo(service):
   result = service.compute_reco_pro(
     scores={"velo":60, "tpu":40, "train":30, "elec":20},
