@@ -112,8 +112,9 @@ class TypoModalService:
     score_covoit = round(15*(i_tmps*4 + i_prix*3 + i_flex*2 + i_conf*4 + i_prof*4 + i_fiab*2 + i_envi*2)/sum_importance) + 2*a_voit + 2*fm_dt_voit
     score_elec = round(15*(i_tmps*4 + i_prix*1 + i_flex*5 + i_conf*5 + i_prof*1 + i_fiab*4 + i_envi*1)/sum_importance) + 2*a_voit + 2*fm_dt_voit
     score_inter = round(15*(i_tmps*4 + i_prix*2 + i_flex*3 + i_conf*4 + i_prof*3 + i_fiab*3 + i_envi*2)/sum_importance) + a_train + a_voit + fm_dt_train + fm_dt_voit + 2 * fm_dt_inter
-    scores = {'marche':score_marche,'velo':score_velo, 'vae':score_vae, 'tpu':score_tpu, 'train':score_train, 'covoit':score_covoit, 'elec':score_elec, 'inter':score_inter}
-
+    score_cargo = round((score_velo + score_vae)/2)
+    scores = {'marche':score_marche,'velo':score_velo, 'vae':score_vae, 'tpu':score_tpu, 'train':score_train, 'covoit':score_covoit, 'elec':score_elec, 'inter':score_inter, 'cargo':score_cargo}    
+    can_cargo = 0
     can_train = 0
     can_tpu = 0
     can_walk = 0
@@ -132,6 +133,8 @@ class TypoModalService:
       can_bike = 1
     if t_traj_mm['t_velo']  <=  2*tps_traj and t_traj_mm['t_velo']  <=  60 and "disabled" not in constraints and "heavy" not in constraints:
       can_vae = 1
+    if t_traj_mm['t_velo']  <=  2*tps_traj and t_traj_mm['t_velo']  <=  30 and "dependent" in constraints and "disabled" not in constraints:
+      can_cargo = 1
     if self.orig_dess.loc[self.orig_dess.id_true == t_traj_mm['oid'], 'train'].values == 0 and self.dest_dess.loc[self.dest_dess.id_true == t_traj_mm['did'], 'train'].values == 1:
       can_inter = 1
     if len(constraints)==0 or constraints==["night"]:
@@ -146,8 +149,8 @@ class TypoModalService:
     else:
       can_elec=1
       can_covoit=1
-    access = {'marche':can_walk,'velo':can_bike, 'vae':can_vae, 'tpu':can_tpu, 'train':can_train, 'covoit':can_covoit, 'elec':can_elec, 'inter':can_inter}
-    score_access = {'marche':can_walk * score_marche,'velo':can_bike * score_velo,'vae':can_vae * score_vae,'tpu':can_tpu * score_tpu,'train':can_train * score_train,'covoit':can_covoit * score_covoit,'elec':can_elec * score_elec,'inter':can_inter * score_inter}
+    access = {'marche':can_walk,'velo':can_bike, 'vae':can_vae, 'tpu':can_tpu, 'train':can_train, 'covoit':can_covoit, 'elec':can_elec, 'inter':can_inter, 'cargo':can_cargo}
+    score_access = {'marche':can_walk * score_marche,'velo':can_bike * score_velo,'vae':can_vae * score_vae,'tpu':can_tpu * score_tpu,'train':can_train * score_train,'covoit':can_covoit * score_covoit,'elec':can_elec * score_elec,'inter':can_inter * score_inter, 'cargo':can_cargo * score_cargo}
     reco_multi = sorted(score_access, key=score_access.get, reverse=True)
     reco_dt2 = reco_multi[0:2]
     return reco_dt2, scores, access

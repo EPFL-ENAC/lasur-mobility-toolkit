@@ -63,6 +63,12 @@ def test_compute_reco_dt_case_9(service):
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3)
   assert reco_dt2 == ['elec','covoit'] 
 
+def test_compute_reco_dt_case_10(service):
+  t_traj_mm = {'t_tp': 30, 't_velo': 30, 'oid': 2795, 'did': 367}
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 20, ["dependent","heavy"], 0, 2, 0, 0, 3, 0, 0, 1, 5, 1, 1, 5, 5, 5, 3, 5, 3, 5, 1, 3)
+  # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3)
+  assert reco_dt2 == ['cargo','elec'] 
+
 # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm = {'t_tim': 15, 't_tp': 30, 't_velo': 30, 'oid': 100, 'did': 100}, 
 #                                               tps_traj = 20, 
 #                                               constraints = [], #'night'
