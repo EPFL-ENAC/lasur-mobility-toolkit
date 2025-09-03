@@ -104,7 +104,7 @@ class TypoModalService:
     """input:frequences modales domicile-travail, attitudes envers modes, importance de differents aspects;
     output: recommandations de mobilite durable pour le deplacement domicile-travail de l'employe.e"""
     sum_importance = i_tmps + i_prix + i_flex + i_conf + i_fiab + i_prof + i_envi
-    score_marche = 50 + 2*a_marc + 2*fm_dt_march
+    score_marche = 60 + 3*a_marc + 3*fm_dt_march
     score_velo = round(15*(i_tmps*1 + i_prix*5 + i_flex*4 + i_conf*1 + i_prof*1 + i_fiab*4 + i_envi*5)/sum_importance) + 2*a_velo + 2*fm_dt_velo
     score_vae = round(15*(i_tmps*3 + i_prix*3 + i_flex*4 + i_conf*1 + i_prof*1 + i_fiab*4 + i_envi*5)/sum_importance) + a_velo + a_moto + fm_dt_velo + fm_dt_moto
     score_tpu = round(15*(i_tmps*3 + i_prix*4 + i_flex*2 + i_conf*2 + i_prof*4 + i_fiab*2 + i_envi*4)/sum_importance) + 2*a_tpu + 2*fm_dt_tpu
