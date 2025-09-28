@@ -3,8 +3,8 @@ from typo_modal.service import TypoModalService, load_data
 
 @pytest.fixture
 def service():
-  od_mm, orig_dess, dest_dess = load_data()
-  return TypoModalService(od_mm, orig_dess, dest_dess)
+  od_mm, orig_dess, dest_dess, can_df = load_data()
+  return TypoModalService(od_mm, orig_dess, dest_dess, can_df)
 
 def test_compute_reco_pro_local_null(service):
   result = service.compute_reco_pro(

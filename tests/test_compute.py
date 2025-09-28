@@ -8,7 +8,7 @@ from importlib import resources
 from typo_modal.service import TypoModalService, load_data
 
 # load precomputed geo data
-od_mm, orig_dess, dest_dess = load_data()
+od_mm, orig_dess, dest_dess, can_df = load_data()
 
 def setup():
   user_file = os.path.join(os.path.dirname(os.path.abspath("__file__")), 'tests/data', 'user_input.json')
@@ -116,7 +116,7 @@ def test_compute_geo():
   assert input_params != None, "input_params empty"
   assert input_frontend != None, "input_frontend empty"
   input_params = read_input_frontend(input_frontend['data'])
-  service = TypoModalService(od_mm, orig_dess, dest_dess)
+  service = TypoModalService(od_mm, orig_dess, dest_dess, can_df)
   t_traj_mm = service.compute_geo(o_lon = input_params["o_lon"], o_lat = input_params["o_lat"], d_lon = input_params["d_lon"], d_lat = input_params["d_lat"])
   #print(t_traj_mm)
   assert t_traj_mm != None, "no travel time found for these coords"
@@ -127,7 +127,7 @@ def test_compute_reco():
   user_input, empl_input, input_params, input_frontend, test_pts = setup()
   input_params = read_input_frontend(input_frontend['data'])
   # print(input_params)
-  service = TypoModalService(od_mm, orig_dess, dest_dess)
+  service = TypoModalService(od_mm, orig_dess, dest_dess, can_df)
 
   t_traj_mm = service.compute_geo(o_lon = input_params["o_lon"], o_lat = input_params["o_lat"], d_lon = input_params["d_lon"], d_lat = input_params["d_lat"])
 

@@ -3,71 +3,83 @@ from typo_modal.service import TypoModalService, load_data
 
 @pytest.fixture
 def service():
-  od_mm, orig_dess, dest_dess = load_data()
-  return TypoModalService(od_mm, orig_dess, dest_dess)
+  od_mm, orig_dess, dest_dess, can_df = load_data()
+  return TypoModalService(od_mm, orig_dess, dest_dess, can_df)
 
 def test_compute_reco_dt_case_1(service):
   t_traj_mm = {'t_tp': 20, 't_velo': 10, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 5, 5, 5, 5, 5, 5, 5)
+  freq_mod_journeys = [{ "days": 3,"modes": ["car"]},{"days": 1,"modes": ["bike"]},{"days": 1,"modes": ["pub"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], freq_mod_journeys, 3, 1, 3, 1, 1, 3, 5, 5, 5, 5, 5, 5, 5)
   assert reco_dt2 == ['tpu','velo'] # 
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 5, 5, 5, 5, 5, 5, 5)
   # assert reco_dt2 == ['tpu','velo'] #
 
 def test_compute_reco_dt_case_2(service):
   t_traj_mm = {'t_tp': 20, 't_velo': 10, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+  freq_mod_journeys = [{ "days": 3,"modes": ["car"]},{"days": 1,"modes": ["train"]},{"days": 1,"modes": ["pub"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], freq_mod_journeys, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1)
   assert reco_dt2 == ['tpu','train'] 
 
 def test_compute_reco_dt_case_3(service):
   t_traj_mm = {'t_tp': 30, 't_velo': 35, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 20, [], 5, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 5, 5, 5, 3, 5, 3, 5, 1, 3)
+  freq_mod_journeys = [{ "days": 4,"modes": ["car"]},{"days": 1,"modes": ["bike","moto"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], freq_mod_journeys, 5, 1, 1, 1, 5, 5, 5, 3, 5, 3, 5, 1, 3)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3)
-  assert reco_dt2 == ['vae','elec'] 
+  assert reco_dt2 == ['velo','vae'] 
 
 def test_compute_reco_dt_case_4(service):
   t_traj_mm = {'t_tp': 20, 't_velo': 5, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 3, 0, 0, 0, 1, 1, 0, 1, 1, 1, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4)
+  freq_mod_journeys = [{ "days": 4,"modes": ["car"]},{"days": 1,"modes": ["bike","walking"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], freq_mod_journeys, 1, 1, 1, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 4, 4, 4, 4, 4, 4, 4)
   assert reco_dt2 == ['marche','velo'] 
 
 def test_compute_reco_dt_case_5(service):
   t_traj_mm = {'t_tp': 20, 't_velo': 10, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["dependent","heavy","night","disabled"], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2)
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["dependent","heavy","night","disabled"], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2)
-  assert reco_dt2 == ['covoit','elec'] 
+  freq_mod_journeys = [{ "days": 5,"modes": ["car"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["dependent","heavy","night","disabled"], freq_mod_journeys, 3, 1, 3, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2)
+  #reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["dependent","heavy","night","disabled"], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2)
+  assert reco_dt2 == ['tpu','covoit'] 
 
 def test_compute_reco_dt_case_6(service):
   t_traj_mm = {'t_tp': 10, 't_velo': 5, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 4, 4, 4, 4, 4, 4, 4)
+  freq_mod_journeys = [{ "days": 4,"modes": ["car"]},{"days": 1,"modes": ["walking","pub"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], freq_mod_journeys, 3, 1, 3, 1, 1, 3, 4, 4, 4, 4, 4, 4, 4)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["disabled"], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 4, 4, 4, 4, 4, 4, 4)
   print(reco_dt2)
   assert reco_dt2 == ['marche','tpu'] 
 
 def test_compute_reco_dt_case_7(service):
   t_traj_mm = {'t_tp': 20, 't_velo': 30, 'oid': 2760, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 2, 0, 0, 2, 0, 0, 1, 3, 1, 1, 3, 1, 1, 2, 2, 2, 2, 2, 2, 2)
+  freq_mod_journeys = [{ "days": 3,"modes": ["moto"]},{"days": 2,"modes": ["bike","pub"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], freq_mod_journeys, 3, 1, 1, 3, 1, 1, 2, 2, 2, 2, 2, 2, 2)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["heavy"], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2)
   print(reco_dt2)
   assert reco_dt2 == ['inter','vae'] 
 
 def test_compute_reco_dt_case_8(service):
   t_traj_mm = {'t_tp': 20, 't_velo': 10, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["dependent"], 5, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+  freq_mod_journeys = [{ "days": 4,"modes": ["car"]},{"days": 1,"modes": ["pub"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, ["dependent"], freq_mod_journeys, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1)
-  assert reco_dt2 == ['elec','tpu'] 
+  assert reco_dt2 == ['tpu','train'] 
 
 def test_compute_reco_dt_case_9(service):
   t_traj_mm = {'t_tp': 30, 't_velo': 35, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 20, ["heavy"], 5, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 5, 5, 5, 3, 5, 3, 5, 1, 3)
+  freq_mod_journeys = [{ "days": 5,"modes": ["car"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 20, ["heavy"], freq_mod_journeys, 5, 1, 1, 1, 5, 5, 5, 3, 5, 3, 5, 1, 3)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3)
-  assert reco_dt2 == ['elec','covoit'] 
+  assert reco_dt2 == ['elec','tpu'] 
 
 def test_compute_reco_dt_case_10(service):
-  t_traj_mm = {'t_tp': 30, 't_velo': 30, 'oid': 2795, 'did': 367}
-  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 20, ["dependent","heavy"], 0, 2, 0, 0, 3, 0, 0, 1, 5, 1, 1, 5, 5, 5, 3, 5, 3, 5, 1, 3)
+  t_traj_mm = {'t_tp': 30, 't_velo': 20, 'oid': 2795, 'did': 367}
+  freq_mod_journeys = [{ "days": 5,"modes": ["car"]}]
+  reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 20, ["dependent"], freq_mod_journeys, 5, 1, 1, 1, 5, 3, 5, 3, 5, 3, 5, 1, 1)
+  print(scores)
+  print(access)
   # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm, 15, [], 5, 0, 0, 0, 0, 0, 0, 3, 1, 3, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3)
-  assert reco_dt2 == ['cargo','elec'] 
+  assert reco_dt2 == ['elec','cargo'] 
 
 # reco_dt2, scores, access = service.compute_reco_multi(t_traj_mm = {'t_tim': 15, 't_tp': 30, 't_velo': 30, 'oid': 100, 'did': 100}, 
 #                                               tps_traj = 20, 

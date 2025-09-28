@@ -1,4 +1,5 @@
 #import necessary packages
+import h3 as h3
 import pandas as pd
 import geopandas as gpd
 from importlib import resources
@@ -15,14 +16,18 @@ def load_data():
   file_path = resources.files(package_name) / 'dest_desserte.parquet'
   with file_path.open('rb') as f:
     dest_dess = gpd.read_parquet(f)
-  return od_mm, orig_dess, dest_dess
+  file_path = resources.files(package_name) / 'h3_can_train_pub.csv'
+  with file_path.open('rb') as f:
+    can_df = pd.read_csv(f)
+  return od_mm, orig_dess, dest_dess, can_df
 
 class TypoModalService:
   
-  def __init__(self, od_mm, orig_dess, dest_dess):
+  def __init__(self, od_mm, orig_dess, dest_dess, can_df):
     self.od_mm = od_mm
     self.orig_dess = orig_dess
     self.dest_dess = dest_dess
+    self.can_df = can_df
     
   # def filter_nnz_dict(self, pair):
   #   key, value = pair
@@ -57,6 +62,34 @@ class TypoModalService:
       except:
         # case out of bounds
         return {}   
+  
+  def compute_fm_pro(self,freq_mod_pro_journeys):
+    fm_pro_voit=0
+    fm_pro_moto=0
+    fm_pro_tpu=0
+    fm_pro_train=0
+    fm_pro_velo=0
+    fm_pro_marc=0
+    fm_pro_boat=0
+    fm_pro_avio=0
+    for j in freq_mod_pro_journeys:
+      if j["mode"] == "car":
+        fm_pro_voit+=j["days"]
+      if j["mode"] == "moto":
+        fm_pro_moto+=j["days"]
+      if j["mode"] == "pub":
+        fm_pro_tpu+=j["days"]
+      if j["mode"] == "train":
+        fm_pro_train+=j["days"]
+      if j["mode"] == "bike":
+        fm_pro_velo+=j["days"]
+      if j["mode"] == "walking":
+        fm_pro_marc+=j["days"]
+      if j["mode"] == "boat":
+        fm_pro_boat+=j["days"]
+      if j["mode"] == "plane":
+        fm_pro_avio+=j["days"]
+    return fm_pro_voit, fm_pro_moto,fm_pro_tpu, fm_pro_train, fm_pro_velo, fm_pro_marc,fm_pro_boat,fm_pro_avio
 
   def compute_reco_dt(self, t_traj_mm, tps_traj, tx_trav, tx_tele, fm_dt_voit, fm_dt_moto, fm_dt_tpu, fm_dt_train, fm_dt_velo, 
                       a_voit, a_moto, a_tpu, a_train, a_marc, a_velo, i_tmps, i_prix, i_flex, i_conf, i_fiab, i_prof, i_envi):
@@ -99,20 +132,41 @@ class TypoModalService:
         reco_dt = "train"
     return reco_dt, scores
   
-  def compute_reco_multi(self, t_traj_mm, tps_traj, constraints, fm_dt_voit, fm_dt_moto, fm_dt_tpu, fm_dt_train, fm_dt_velo, fm_dt_march, fm_dt_inter,
-                      a_voit, a_moto, a_tpu, a_train, a_velo, a_marc, i_tmps, i_prix, i_flex, i_conf, i_fiab, i_prof, i_envi):
+  def compute_reco_multi(self, t_traj_mm, tps_traj, constraints, freq_mod_journeys,a_voit, a_moto, a_tpu, a_train, a_velo, a_marc, i_tmps, i_prix, i_flex, i_conf, i_fiab, i_prof, i_envi):
     """input:frequences modales domicile-travail, attitudes envers modes, importance de differents aspects;
     output: recommandations de mobilite durable pour le deplacement domicile-travail de l'employe.e"""
+    fm_dt_voit=0
+    fm_dt_moto=0
+    fm_dt_tpu=0
+    fm_dt_train=0
+    fm_dt_velo=0
+    fm_dt_march=0
+    fm_dt_inter=0
+    for i in freq_mod_journeys:
+      if "walking" in i["modes"]:
+        fm_dt_march+=i["days"]
+      if "bike" in i["modes"]:
+        fm_dt_velo+=i["days"]
+      if "pub" in i["modes"]:
+        fm_dt_tpu+=i["days"]
+      if "train" in i["modes"]:
+        fm_dt_train+=i["days"]
+      if "moto" in i["modes"]:
+        fm_dt_moto+=i["days"]
+      if "car" in i["modes"]:
+        fm_dt_voit+=i["days"]
+      if len(i["modes"])>1:
+        fm_dt_inter+=i["days"]
     sum_importance = i_tmps + i_prix + i_flex + i_conf + i_fiab + i_prof + i_envi
     score_marche = 60 + 3*a_marc + 3*fm_dt_march
     score_velo = round(15*(i_tmps*1 + i_prix*5 + i_flex*4 + i_conf*1 + i_prof*1 + i_fiab*4 + i_envi*5)/sum_importance) + 2*a_velo + 3*fm_dt_velo
     score_vae = round(15*(i_tmps*3 + i_prix*3 + i_flex*4 + i_conf*1 + i_prof*1 + i_fiab*4 + i_envi*5)/sum_importance) + a_velo + a_moto + 2*fm_dt_velo + fm_dt_moto
     score_tpu = round(15*(i_tmps*3 + i_prix*4 + i_flex*2 + i_conf*2 + i_prof*4 + i_fiab*2 + i_envi*4)/sum_importance) + 2*a_tpu + 3*fm_dt_tpu
     score_train = round(15*(i_tmps*3 + i_prix*1 + i_flex*2 + i_conf*3 + i_prof*5 + i_fiab*3 + i_envi*4)/sum_importance) + 2*a_train + 3*fm_dt_train
-    score_covoit = round(15*(i_tmps*4 + i_prix*3 + i_flex*2 + i_conf*4 + i_prof*4 + i_fiab*2 + i_envi*2)/sum_importance) + 2*a_voit + 2*fm_dt_voit
-    score_elec = round(15*(i_tmps*4 + i_prix*1 + i_flex*5 + i_conf*5 + i_prof*1 + i_fiab*4 + i_envi*1)/sum_importance) + 2*a_voit + 2*fm_dt_voit
-    score_inter = round(15*(i_tmps*4 + i_prix*2 + i_flex*3 + i_conf*4 + i_prof*3 + i_fiab*3 + i_envi*2)/sum_importance) + a_train + a_voit + fm_dt_train + fm_dt_voit + 2 * fm_dt_inter
-    score_cargo = round((score_velo + score_vae)/2)
+    score_covoit = round(15*(i_tmps*4 + i_prix*3 + i_flex*2 + i_conf*4 + i_prof*4 + i_fiab*2 + i_envi*2)/sum_importance) + 2*a_voit
+    score_elec = round(15*(i_tmps*4 + i_prix*1 + i_flex*5 + i_conf*5 + i_prof*1 + i_fiab*4 + i_envi*1)/sum_importance) + 2*a_voit
+    score_inter = round(15*(i_tmps*4 + i_prix*2 + i_flex*3 + i_conf*4 + i_prof*3 + i_fiab*3 + i_envi*2)/sum_importance) + a_train + a_tpu + fm_dt_train + fm_dt_tpu + 2 * fm_dt_inter
+    score_cargo = max(score_velo, score_vae)
     scores = {'marche':score_marche,'velo':score_velo, 'vae':score_vae, 'tpu':score_tpu, 'train':score_train, 'covoit':score_covoit, 'elec':score_elec, 'inter':score_inter, 'cargo':score_cargo}    
     can_cargo = 0
     can_train = 0
@@ -123,6 +177,18 @@ class TypoModalService:
     can_inter = 0
     can_elec = 0
     can_covoit = 0
+    if fm_dt_march>0:
+      can_walk = 1
+    if fm_dt_velo>0:
+      can_bike = 1
+      can_vae = 0.9
+      can_cargo = 0.8
+    if fm_dt_tpu>0:
+      can_tpu = 1
+    if fm_dt_train>0:
+      can_train = 1
+    if fm_dt_inter>0:
+      can_inter = 1
     if t_traj_mm['t_tp']  <=  2*tps_traj and self.orig_dess.loc[self.orig_dess.id_true == t_traj_mm['oid'], 'train'].values == 1 and self.dest_dess.loc[self.dest_dess.id_true == t_traj_mm['did'], 'train'].values == 1:
       can_train = 1
     if t_traj_mm['t_tp']  <=  2*tps_traj and self.orig_dess.loc[self.orig_dess.id_true == t_traj_mm['oid'], 'tpu'].values == 1 and self.dest_dess.loc[self.dest_dess.id_true == t_traj_mm['did'], 'tpu'].values == 1:
@@ -202,6 +268,48 @@ class TypoModalService:
         if scores['train']>50 or fm_pro_int_train >= 1:
           reco_pro_int = "train"
     return reco_pro_loc, reco_pro_reg, reco_pro_int
+  
+  def compute_reco_pro_h3(self,scores,can_df,freq_mod_pro_journeys):
+      reco_pro = [] #reco_pro is a list of recommendations corresponding to each professional journey entered
+      for j in freq_mod_pro_journeys:
+          dest=j["hex_id"]
+          mode=j["mode"]
+          if h3.get_resolution(dest)==1:
+              if dest in h3.grid_disk(wp_res_1, 1):
+                  reco_pro.append("train")
+              elif mode == "car":
+                  reco_pro.append("avoid")
+              elif mode == "plane":
+                  reco_pro.append("avoid")
+              else:
+                  reco_pro.append(mode)
+                  
+          if h3.get_resolution(dest)==2:
+              if dest in h3.grid_disk(wp_res_2, 3):
+                  reco_pro.append("train")
+              elif mode == "car":
+                  reco_pro.append("avoid")
+              elif mode == "plane":
+                  reco_pro.append("avoid")
+              else:
+                  reco_pro.append(mode)
+                  
+          if h3.get_resolution(dest)==5:
+              if mode=="walking":
+                  reco_pro.append("walking")
+              elif mode=="bike" or (dest==wp_res_5 and scores['velo']>50):
+                  reco_pro.append("bike")
+              elif mode=="pub" or (dest in h3.grid_disk(wp_res_5, 1) and can_df.loc[can_df.hex_id==dest,'can_tpu'].values==1 and scores['tpu']>50):
+                  reco_pro.append("pub")
+              elif mode=="train" or (can_df.loc[can_df.hex_id==dest,'can_train'].values==1 and scores['train']>50):
+                  reco_pro.append("train")
+              elif mode=="boat":
+                  reco_pro.append("boat")
+              elif mode=="moto":
+                  reco_pro.append("elec_moto")
+              else:
+                  reco_pro.append("elec")  
+      return reco_pro
 
   def compute_mesu_empl(self, empl, reco_dt2, reco_pro_loc, reco_pro_reg, reco_pro_int):
     # init return values

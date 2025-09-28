@@ -3,8 +3,8 @@ from typo_modal.service import TypoModalService, load_data
 
 @pytest.fixture
 def service():
-  od_mm, orig_dess, dest_dess = load_data()
-  return TypoModalService(od_mm, orig_dess, dest_dess)
+  od_mm, orig_dess, dest_dess, can_df = load_data()
+  return TypoModalService(od_mm, orig_dess, dest_dess, can_df)
 
 def test_compute_geo(service):
   result = service.compute_geo(6.19, 46.32, 6.14, 46.21)#6.11, 46.25 #6.22, 46.20, 6.19, 46.32,

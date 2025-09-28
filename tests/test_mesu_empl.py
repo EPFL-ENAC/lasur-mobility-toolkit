@@ -41,8 +41,8 @@ modus = { "id_empl": "MODU",
 
 @pytest.fixture
 def service():
-  od_mm, orig_dess, dest_dess = load_data()
-  return TypoModalService(od_mm, orig_dess, dest_dess)
+  od_mm, orig_dess, dest_dess, can_df = load_data()
+  return TypoModalService(od_mm, orig_dess, dest_dess, can_df)
 
 def test_mesu_empl_case_1(service):
   reco_dt2 = ['train','vae']

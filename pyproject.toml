@@ -1,3 +1,14 @@
+[project]
+name = "typo-modal"
+version = "0.1.0"
+dependencies = [
+    "contextily>=1.6.2",
+    "h3>=4.3.1",
+    "kaleido>=1.0.0",
+    "plotly>=6.3.0",
+    "spyder>=6.0.8",
+]
+
 [tool.poetry]
 name = "typo-modal"
 version = "0.1.2"
