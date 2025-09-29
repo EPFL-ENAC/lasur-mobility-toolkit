@@ -275,10 +275,10 @@ class TypoModalService:
       wp_res_2 = "821f87fffffffff"#freq_mod_pro_journeys[0]["hex_id"]
       wp_res_1 = "811fbffffffffff"#freq_mod_pro_journeys[2]["hex_id"]
       for j in freq_mod_pro_journeys:
-          print(j)
+          #print(j)
           dest=j["hex_id"]
           mode=j["mode"]
-          print(h3.get_resolution(dest))
+          #print(h3.get_resolution(dest))
           if h3.get_resolution(dest)==1:
               if dest in h3.grid_disk(wp_res_1, 1):
                   reco_pro.append("train")
@@ -304,9 +304,9 @@ class TypoModalService:
                   reco_pro.append("walking")
               elif mode=="bike" or (dest==wp_res_5 and scores['velo']>50):
                   reco_pro.append("bike")
-              elif mode=="pub" or (dest in h3.grid_disk(wp_res_5, 1) and can_df.loc[can_df.hex_id==dest,'can_tpu'].values==1 and scores['tpu']>50):
+              elif mode=="pub" or (dest in h3.grid_disk(wp_res_5, 1) and can_df.loc[can_df['h3']==dest,'can_pub'].values==1 and scores['tpu']>50):
                   reco_pro.append("pub")
-              elif mode=="train" or (can_df.loc[can_df.hex_id==dest,'can_train'].values==1 and scores['train']>50):
+              elif mode=="train" or (can_df.loc[can_df['h3']==dest,'can_train'].values==1 and scores['train']>50):
                   reco_pro.append("train")
               elif mode=="boat":
                   reco_pro.append("boat")

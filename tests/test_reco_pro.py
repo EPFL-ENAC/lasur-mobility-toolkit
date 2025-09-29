@@ -7,11 +7,103 @@ def service():
   return TypoModalService(od_mm, orig_dess, dest_dess, can_df)
 
 def test_compute_reco_pro_h3(service):
-  result = service.compute_reco_pro_h3(scores={"velo":50, "tpu":50, "train":50, "elec":50},
+  freq_mod_pro_journeys = [
+    {
+        "days": 1,
+        "mode": "plane",
+        "hex_id": "81397ffffffffff"
+      },
+      {
+        "days": 1,
+        "mode": "plane",
+        "hex_id": "81393ffffffffff"
+      },
+      {
+        "days": 2,
+        "mode": "car",
+        "hex_id": "821fa7fffffffff"
+      },
+      {
+        "days": 2,
+        "mode": "car",
+        "hex_id": "821f4ffffffffff"
+      },
+      {
+        "days": 5,
+        "mode": "walking",
+        "hex_id": "851f9103fffffff"
+      },
+      {
+        "days": 5,
+        "mode": "boat",
+        "hex_id": "851f8e87fffffff"
+      },
+      {
+        "days": 5,
+        "mode": "moto",
+        "hex_id": "851f8e87fffffff"
+      },
+      {
+        "days": 6,
+        "mode": "car",
+        "hex_id": "851f91affffffff"
+      },
+      {
+        "days": 6,
+        "mode": "car",
+        "hex_id": "851f91b7fffffff"
+      },
+      {
+        "days": 7,
+        "mode": "car",
+        "hex_id": "851f91abfffffff"
+      },
+      {
+        "days": 7,
+        "mode": "car",
+        "hex_id": "851f8e87fffffff"
+      },
+      {
+        "days": 7,
+        "mode": "car",
+        "hex_id": "851f9cdbfffffff"
+      },
+      {
+        "days": 8,
+        "mode": "car",
+        "hex_id": "851f8343fffffff"
+      },
+      {
+        "days": 8,
+        "mode": "car",
+        "hex_id": "851f9917fffffff"
+      },
+      {
+        "days": 9,
+        "mode": "plane",
+        "hex_id": "851f9917fffffff"
+      }
+    ]
+
+  result = service.compute_reco_pro_h3(scores={"velo":55, "tpu":55, "train":55, "elec":55},
+                                       can_df=service.can_df,
+                                       freq_mod_pro_journeys=freq_mod_pro_journeys,
+                                       d_lat=46.25, d_lon=6.15)
+  assert result == ['train','avoid','train','avoid','walking','boat','elec_moto','bike','train','pub','elec','train','train','elec','elec']
+
+def test_compute_reco_pro_h3_1trip(service):
+  result = service.compute_reco_pro_h3(scores={"velo":55, "tpu":55, "train":55, "elec":55},
                                        can_df=service.can_df,
                                        freq_mod_pro_journeys=[{"days": 2, "mode": "car", "hex_id": "821fa7fffffffff"},],
                                        d_lat=46.25, d_lon=6.15)
   assert result == ["train"]
+
+def test_compute_reco_pro_h3_0trip(service):
+  result = service.compute_reco_pro_h3(scores={"velo":50, "tpu":50, "train":50, "elec":50},
+                                       can_df=service.can_df,
+                                       freq_mod_pro_journeys=[],
+                                       d_lat=46.25, d_lon=6.15)
+  assert result == []
 
 def test_compute_reco_pro_local_null(service):
   result = service.compute_reco_pro(
