@@ -269,11 +269,16 @@ class TypoModalService:
           reco_pro_int = "train"
     return reco_pro_loc, reco_pro_reg, reco_pro_int
   
-  def compute_reco_pro_h3(self,scores,can_df,freq_mod_pro_journeys):
+  def compute_reco_pro_h3(self,scores,can_df,freq_mod_pro_journeys,d_lat,d_lon):
       reco_pro = [] #reco_pro is a list of recommendations corresponding to each professional journey entered
+      wp_res_5 = h3.latlng_to_cell(d_lat, d_lon, 5)#freq_mod_pro_journeys[1]["hex_id"]
+      wp_res_2 = "821f87fffffffff"#freq_mod_pro_journeys[0]["hex_id"]
+      wp_res_1 = "811fbffffffffff"#freq_mod_pro_journeys[2]["hex_id"]
       for j in freq_mod_pro_journeys:
+          print(j)
           dest=j["hex_id"]
           mode=j["mode"]
+          print(h3.get_resolution(dest))
           if h3.get_resolution(dest)==1:
               if dest in h3.grid_disk(wp_res_1, 1):
                   reco_pro.append("train")
