@@ -1,12 +1,16 @@
 [project]
 name = "typo-modal"
 version = "0.1.0"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "contextily>=1.6.2",
     "h3>=4.3.1",
     "kaleido>=1.0.0",
     "plotly>=6.3.0",
     "spyder>=6.0.8",
+    "geopandas (>=1.1.1,<2.0.0)",
+    "pandas (>=2.3.2,<3.0.0)",
+    "pyarrow (>=21.0.0,<22.0.0)",
 ]
 
 [tool.poetry]
@@ -16,13 +20,6 @@ description = ""
 authors = ["Clément Rames <clement.rames@epfl.ch>"]
 license = "GPLv3"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-pandas = "^2.2.3"
-geopandas = "^1.0.1"
-pyarrow = "^19.0.1"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
