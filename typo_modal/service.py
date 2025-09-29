@@ -16,9 +16,9 @@ def load_data():
   file_path = resources.files(package_name) / 'dest_desserte.parquet'
   with file_path.open('rb') as f:
     dest_dess = gpd.read_parquet(f)
-  file_path = resources.files(package_name) / 'h3_can_train_pub.csv'
+  file_path = resources.files(package_name) / 'h3_can_train_pub.parquet'
   with file_path.open('rb') as f:
-    can_df = pd.read_csv(f)
+    can_df = pd.read_parquet(f)
   return od_mm, orig_dess, dest_dess, can_df
 
 class TypoModalService:
