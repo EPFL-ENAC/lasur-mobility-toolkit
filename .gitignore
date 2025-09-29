@@ -143,3 +143,5 @@ cython_debug/
 .RData
 .Rhistory
 .Ruserdata
+
+.virtual_documents/
