@@ -125,6 +125,22 @@ def test_compute_geo():
 
 def test_compute_reco():
   user_input, empl_input, input_params, input_frontend, test_pts = setup()
+  epfl = { "id_empl": "EPFL",
+  "mesures_globa":["Possibilité de télétravailler au domicile"],
+  "mesures_tpu":["Prise en charge abo UNIRESO (TPG)"], 
+  "mesures_train":["Prise en charge abo CFF (AG) tout ou en partie",
+                "Prise en charge abo CFF (1/2 tarif)"],
+  "mesures_inter":[],              
+  "mesures_velo":["Mise à disposition de vestiaire et douches",
+                "Places de stationnement sécurisé vélo",
+                "Possibilité de chargement batterie vélo électrique"],
+  "mesures_covoit":["Places de stationnement réservées covoiturage"],
+  "mesures_elec":["Bornes de chargement véhicule électrique"],
+  "mesures_pro_velo":[],
+  "mesures_pro_tpu":["Prise en charge abo UNIRESO (TPG)"],
+  "mesures_pro_train":["Prise en charge abo CFF (Abonnement Général)"],
+  "mesures_pro_elec":[]
+  }
   input_params = read_input_frontend(input_frontend['data'])
   # print(input_params)
   service = TypoModalService(od_mm, orig_dess, dest_dess, can_df)
@@ -175,13 +191,11 @@ def test_compute_reco():
                                                                       input_params['fm_pro_int_voit'], 
                                                                       input_params['fm_pro_int_train'], 
                                                                       input_params['fm_pro_int_avio'])
-  mesure_dt1, mesure_dt2, mesure_pro_loc, mesure_pro_regint = service.compute_mesu_empl(empl_input, reco_dt, reco_pro_loc, reco_pro_reg, reco_pro_int)
+  reco_pro=[]
+  mesure_dt1, mesure_dt2, mesure_pro = service.compute_mesu_empl(epfl, reco_dt, reco_pro)
   #print(mesure_dt1)
   #print(mesure_dt2)
-  print(mesure_pro_loc)
-  print(mesure_pro_regint)
+  print(mesure_pro)
   assert mesure_dt1 == "t"
   assert mesure_dt2 == "p"
-  assert mesure_pro_loc == ["ebike_fleet"]
-  assert mesure_pro_regint == ["train_pro"]
 

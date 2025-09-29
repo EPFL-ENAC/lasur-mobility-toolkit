@@ -46,50 +46,39 @@ def service():
 
 def test_mesu_empl_case_1(service):
   reco_dt2 = ['train','vae']
-  reco_pro_loc = "velo"
-  reco_pro_reg = "train"
-  reco_pro_int = "train"
-  mesure_dt1, mesure_dt2, mesure_pro_loc, mesure_pro_regint = service.compute_mesu_empl(empl = epfl, reco_dt2 = reco_dt2, reco_pro_loc=reco_pro_loc, reco_pro_reg=reco_pro_reg, reco_pro_int=reco_pro_int)
+  reco_pro = ["velo","train"]
+  mesure_dt1, mesure_dt2, mesure_pro = service.compute_mesu_empl(empl = epfl, reco_dt2 = reco_dt2, reco_pro = reco_pro)
   assert mesure_dt1 == ['Prise en charge abo CFF (AG) tout ou en partie', 'Prise en charge abo CFF (1/2 tarif)'] # FIXME
   assert mesure_dt2 == ["Mise à disposition de vestiaire et douches",
                 "Places de stationnement sécurisé vélo",
                 "Possibilité de chargement batterie vélo électrique"]
-  assert mesure_pro_loc == []
-  assert mesure_pro_regint == ["Prise en charge abo CFF (Abonnement Général)"]
+  assert mesure_pro == [[],["Prise en charge abo CFF (Abonnement Général)"]]
 
 def test_compute_mesu_empl_case_2(service):
   reco_dt2 = ['velo','tpu']
-  reco_pro_loc = "tpu"
-  reco_pro_reg = "train"
-  reco_pro_int = "elec"
-  mesure_dt1, mesure_dt2, mesure_pro_loc, mesure_pro_regint = service.compute_mesu_empl(empl = modus, reco_dt2 = reco_dt2, reco_pro_loc=reco_pro_loc, reco_pro_reg=reco_pro_reg, reco_pro_int=reco_pro_int)
+  reco_pro = ["tpu","train"]
+  mesure_dt1, mesure_dt2, mesure_pro = service.compute_mesu_empl(empl = modus, reco_dt2 = reco_dt2, reco_pro = reco_pro)
   assert mesure_dt1 == ["Subvention à l'achat d'un vélo / vélo électrique",
                 "Possibilité de chargement batterie vélo électrique",
                 "Remboursement d'équipement de sécurité et confort vélo"]
   assert mesure_dt2 == ["Prise en charge abo UNIRESO (TPG)",
                 "Prise en charge abo Léman Pass"]
-  assert mesure_pro_loc == ["Prise en charge abo UNIRESO (TPG)"]
-  assert mesure_pro_regint == ["Politique de substitution de l'avion par le train"]
+  assert mesure_pro == [["Prise en charge abo UNIRESO (TPG)"],["Politique de substitution de l'avion par le train"]]
 
 def test_mesu_empl_case_3(service):
   reco_dt2 = ['covoit','orga']
-  reco_pro_loc = "train"
-  reco_pro_reg = "elec"
-  reco_pro_int = "train"
-  mesure_dt1, mesure_dt2, mesure_pro_loc, mesure_pro_regint = service.compute_mesu_empl(empl = epfl, reco_dt2 = reco_dt2, reco_pro_loc=reco_pro_loc, reco_pro_reg=reco_pro_reg, reco_pro_int=reco_pro_int)
+  reco_pro = ["train","elec","train"]
+  mesure_dt1, mesure_dt2, mesure_pro = service.compute_mesu_empl(empl = epfl, reco_dt2 = reco_dt2, reco_pro = reco_pro)
+  print(mesure_pro)
   assert mesure_dt1 == ["Places de stationnement réservées covoiturage"]
   assert mesure_dt2 == ["Possibilité de télétravailler au domicile"]
-  assert mesure_pro_loc == ["Prise en charge abo CFF (Abonnement Général)"]
-  assert mesure_pro_regint == ["Prise en charge abo CFF (Abonnement Général)"]
+  assert mesure_pro == [["Prise en charge abo CFF (Abonnement Général)"],[],["Prise en charge abo CFF (Abonnement Général)"]]
 
 def test_compute_mesu_empl_case_4(service):
   reco_dt2 = ['inter','elec']
-  reco_pro_loc = "elec"
-  reco_pro_reg = "elec"
-  reco_pro_int = "elec"
-  mesure_dt1, mesure_dt2, mesure_pro_loc, mesure_pro_regint = service.compute_mesu_empl(empl = modus, reco_dt2 = reco_dt2, reco_pro_loc=reco_pro_loc, reco_pro_reg=reco_pro_reg, reco_pro_int=reco_pro_int)
+  reco_pro = ["elec","elec"]
+  mesure_dt1, mesure_dt2, mesure_pro = service.compute_mesu_empl(empl = modus, reco_dt2 = reco_dt2, reco_pro = reco_pro)
   assert mesure_dt1 == ["Prise en charge partielle abo P+R",
                 "Prise en charge abo vélostation"] 
   assert mesure_dt2 == ["Prise en charge abo mobility car-sharing"]
-  assert mesure_pro_loc == ["Véhicules électriques à disposition pour déplacements pro"]
-  assert mesure_pro_regint == ["Véhicules électriques à disposition pour déplacements pro"]
+  assert mesure_pro == [["Véhicules électriques à disposition pour déplacements pro"],["Véhicules électriques à disposition pour déplacements pro"]]

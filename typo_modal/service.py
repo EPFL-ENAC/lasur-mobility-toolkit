@@ -316,12 +316,12 @@ class TypoModalService:
                   reco_pro.append("elec")  
       return reco_pro
 
-  def compute_mesu_empl(self, empl, reco_dt2, reco_pro_loc, reco_pro_reg, reco_pro_int):
+  def compute_mesu_empl(self, empl, reco_dt2, reco_pro):
     # init return values
     mesure_dt1 = []
     mesure_dt2 = []
-    mesure_pro_loc = []
-    mesure_pro_regint = []
+    mesure_pro = []
+   
     if reco_dt2[0] == 'marche':
       mesure_dt1 = []
     elif reco_dt2[0] == 'velo':
@@ -381,34 +381,56 @@ class TypoModalService:
       mesure_dt2 = empl['mesures_globa']
     else:
       mesure_dt2 = reco_dt2[1]
-      
-    if reco_pro_loc == 'marche':
-      mesure_pro_loc = []
-    elif reco_pro_loc == 'velo':
-      mesure_pro_loc = empl['mesures_pro_velo']
-    elif reco_pro_loc == 'tpu':
-      if empl['mesures_pro_tpu'] != []:
-        mesure_pro_loc = empl['mesures_pro_tpu']
-      else:
-        mesure_pro_loc = empl['mesures_pro_train']
-    elif reco_pro_loc == 'train':
-      if empl['mesures_pro_train'] != []:
-        mesure_pro_loc = empl['mesures_pro_train']
-      else:
-        mesure_pro_loc = empl['mesures_pro_tpu']
-    elif reco_pro_loc == 'elec':
-      mesure_pro_loc = empl['mesures_pro_elec']
-    if reco_pro_reg == 'train' or reco_pro_int == 'train':
-      mesure_pro_regint = empl['mesures_pro_train']
-    elif reco_pro_reg == 'elec' or reco_pro_int == 'elec':
-      mesure_pro_regint = empl['mesures_pro_elec']
-    return mesure_dt1, mesure_dt2, mesure_pro_loc, mesure_pro_regint
+    
+    for r in reco_pro:
+      if r == 'marche':
+        mesure_pro.append('')
+      elif r == 'velo':
+        mesure_pro.append(empl['mesures_pro_velo'])
+      elif r == 'tpu':
+        if empl['mesures_pro_tpu'] != []:
+          mesure_pro.append(empl['mesures_pro_tpu'])
+        else:
+          mesure_pro.append(empl['mesures_pro_train'])
+      elif r == 'train':
+        if empl['mesures_pro_train'] != []:
+          mesure_pro.append(empl['mesures_pro_train'])
+        else:
+          mesure_pro.append(empl['mesures_pro_tpu'])
+      elif r == 'elec':
+        mesure_pro.append(empl['mesures_pro_elec'])
+      if r == 'avoid':
+        mesure_pro.append('')
 
-  def display_main_mode(self,fm_dt_voit, fm_dt_moto, fm_dt_tpu, fm_dt_train, fm_dt_velo,fm_dt_march, fm_dt_inter, mesure_dt1, mesure_dt2):
+    return mesure_dt1, mesure_dt2, mesure_pro
+
+  def display_main_mode(self,freq_mod_journeys, mesure_dt1, mesure_dt2):
+    fm_dt_voit=0
+    fm_dt_moto=0
+    fm_dt_tpu=0
+    fm_dt_train=0
+    fm_dt_velo=0
+    fm_dt_march=0
+    fm_dt_inter=0
+    for i in freq_mod_journeys:
+      if "walking" in i["modes"]:
+        fm_dt_march+=i["days"]
+      if "bike" in i["modes"]:
+        fm_dt_velo+=i["days"]
+      if "pub" in i["modes"]:
+        fm_dt_tpu+=i["days"]
+      if "train" in i["modes"]:
+        fm_dt_train+=i["days"]
+      if "moto" in i["modes"]:
+        fm_dt_moto+=i["days"]
+      if "car" in i["modes"]:
+        fm_dt_voit+=i["days"]
+      if len(i["modes"])>1:
+        fm_dt_inter+=i["days"]
     main_mode=""
     fm={"the car":fm_dt_voit, "the motorbike":fm_dt_moto, "public transport":fm_dt_tpu, "the train":fm_dt_train, "the bicycle":fm_dt_velo,"walking":fm_dt_march,"intermodality":fm_dt_inter}
     main_mode=max(fm, key=fm.get)
-    if fm_dt_inter == 1:
+    if main_mode == "intermodality":
       text_a = "At present, you mainly use a combination of modes to get to your workplace."
     else:
       text_a = "At present, you mainly use " + main_mode + " to get to your workplace."
