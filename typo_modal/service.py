@@ -269,7 +269,7 @@ class TypoModalService:
           reco_pro_int = "train"
     return reco_pro_loc, reco_pro_reg, reco_pro_int
   
-  def compute_reco_pro_h3(self,scores,can_df,freq_mod_pro_journeys,d_lat,d_lon):
+  def compute_reco_pro_h3(self,scores,freq_mod_pro_journeys,d_lat,d_lon):
       reco_pro = [] #reco_pro is a list of recommendations corresponding to each professional journey entered
       wp_res_5 = h3.latlng_to_cell(d_lat, d_lon, 5)#freq_mod_pro_journeys[1]["hex_id"]
       wp_res_2 = "821f87fffffffff"#freq_mod_pro_journeys[0]["hex_id"]
@@ -304,9 +304,9 @@ class TypoModalService:
                   reco_pro.append("walking")
               elif mode=="bike" or (dest==wp_res_5 and scores['velo']>50):
                   reco_pro.append("bike")
-              elif mode=="pub" or (dest in h3.grid_disk(wp_res_5, 1) and can_df.loc[can_df['h3']==dest,'can_pub'].values==1 and scores['tpu']>50):
+              elif mode=="pub" or (dest in h3.grid_disk(wp_res_5, 1) and self.can_df.loc[self.can_df['h3']==dest,'can_pub'].values==1 and scores['tpu']>50):
                   reco_pro.append("pub")
-              elif mode=="train" or (can_df.loc[can_df['h3']==dest,'can_train'].values==1 and scores['train']>50):
+              elif mode=="train" or (self.can_df.loc[self.can_df['h3']==dest,'can_train'].values==1 and scores['train']>50):
                   reco_pro.append("train")
               elif mode=="boat":
                   reco_pro.append("boat")

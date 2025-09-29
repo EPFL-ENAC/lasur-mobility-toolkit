@@ -86,21 +86,18 @@ def test_compute_reco_pro_h3(service):
     ]
 
   result = service.compute_reco_pro_h3(scores={"velo":55, "tpu":55, "train":55, "elec":55},
-                                       can_df=service.can_df,
                                        freq_mod_pro_journeys=freq_mod_pro_journeys,
                                        d_lat=46.25, d_lon=6.15)
   assert result == ['train','avoid','train','avoid','walking','boat','elec_moto','bike','train','pub','elec','train','train','elec','elec']
 
 def test_compute_reco_pro_h3_1trip(service):
   result = service.compute_reco_pro_h3(scores={"velo":55, "tpu":55, "train":55, "elec":55},
-                                       can_df=service.can_df,
                                        freq_mod_pro_journeys=[{"days": 2, "mode": "car", "hex_id": "821fa7fffffffff"},],
                                        d_lat=46.25, d_lon=6.15)
   assert result == ["train"]
 
 def test_compute_reco_pro_h3_0trip(service):
   result = service.compute_reco_pro_h3(scores={"velo":50, "tpu":50, "train":50, "elec":50},
-                                       can_df=service.can_df,
                                        freq_mod_pro_journeys=[],
                                        d_lat=46.25, d_lon=6.15)
   assert result == []
